@@ -5,11 +5,20 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsc -b && node ./dist/index.js",
+    "migrate:create": "node-pg-migrate create",
+    "migrate:up": "node-pg-migrate up",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
-  "dependencies": {}
+  "dependencies": {
+    "@types/express": "^5.0.6",
+    "@types/pg": "^8.20.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "node-pg-migrate": "^9.0.0",
+    "pg": "^8.22.0"
+  }
 }
