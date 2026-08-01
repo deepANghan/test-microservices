@@ -8,6 +8,10 @@ const routes = [
     {
         path: "/todo",
         target: registry.TODO_SERVICE_URL
+    },
+    {
+        path: "/auth",
+        target: registry.AUTH_SERVICE_URL
     }
 ];
 
