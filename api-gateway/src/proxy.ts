@@ -19,19 +19,32 @@ async function handleProxy(req: Request, res: Response) {
 
     try {
 
-        // console.log("Target:", route.target + req.originalUrl);
-
         const result = await axios({
             url: route.target + req.originalUrl,
             method: req.method,
             data: req.body,
+            headers: {
+                "content-type": req.headers["content-type"]
+            },
             timeout: 5000
         });
 
         return res.status(result.status).json(result.data);
 
 
-    } catch (error) {
+    } catch (error: any) {
+
+        console.log(error.message);
+
+        if (error.response) {
+
+            // Service responded with an error
+
+            return res
+                .status(error.response.status)
+                .json(error.response.data);
+
+        }
 
         return res.status(503)
             .json({
