@@ -12,13 +12,13 @@ class UserController {
 
     create = async (req: Request, res: Response) => {
 
-        const { name, email } = req.body;
+        const { userId, name, email } = req.body;
 
-        if (!name || !email) {
+        if (!userId || !name || !email) {
             throw new Error("Field is empty");
         }
 
-        const user = await this.userService.createUser(name, email);
+        const user = await this.userService.createUser(userId, name, email);
 
         return res.status(201).json({
             success: true,

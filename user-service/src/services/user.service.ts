@@ -8,8 +8,8 @@ class UserService {
         this.userRepository = new UserRepository();
     }
 
-    async createUser(name: string, email: string) {
-        return this.userRepository.create(name, email);
+    async createUser(userId: string, name: string, email: string) {
+        return this.userRepository.create(userId, name, email);
     }
 
     async getUser(id: string) {

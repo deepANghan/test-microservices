@@ -5,13 +5,14 @@ import { randomUUID } from "crypto";
 class UserRepository {
 
     async create(
+        userId: string,
         name: string,
         email: string
     ): Promise<User> {
 
         const result = await pool.query(`
         INSERT INTO users(id, name, email) values ($1, $2, $3) RETURNING *
-        `, [randomUUID().toString(), name, email]);
+        `, [userId, name, email]);
 
         return result.rows[0];
     }
