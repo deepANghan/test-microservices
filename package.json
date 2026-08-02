@@ -1,0 +1,26 @@
+{
+  "name": "test-microservices",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepANghan/test-microservices.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/deepANghan/test-microservices/issues"
+  },
+  "homepage": "https://github.com/deepANghan/test-microservices#readme",
+  "private": true
+}
