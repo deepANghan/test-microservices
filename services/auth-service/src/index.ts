@@ -1,6 +1,7 @@
 import express, { type NextFunction, type Request, type Response } from "express";
 import { env } from "./config/env.js";
 import { AuthController } from "./controllers/auth.controller.js";
+import { createServiceToken } from "@package/auth/sign";
 
 const app = express();
 const PORT = env.PORT;
@@ -11,6 +12,18 @@ const authController = new AuthController();
 
 app.post("/api/auth/signup", authController.register);
 app.post("/api/auth/signin", authController.login);
+
+app.post("/api/auth/serviceToken", (req, res) => {
+
+    const { serviceName } = req.body;
+
+    let token = createServiceToken(serviceName);
+
+    return res.status(201).json({
+        data: token
+    });
+
+});
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 

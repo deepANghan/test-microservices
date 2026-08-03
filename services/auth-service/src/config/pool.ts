@@ -1,4 +1,4 @@
-import { Pool } from "../../node_modules/@types/pg/index.js";
+import { Pool } from "pg";
 import { env } from "./env.js";
 
 const pool = new Pool({
