@@ -4,6 +4,7 @@ import { UserServiceClient } from "@package/proto";
 let client: UserServiceClient | null = null;
 
 function getClient() {
+
     if (!client) {
         const credentials = grpc.credentials.createInsecure();
 

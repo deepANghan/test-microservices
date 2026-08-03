@@ -1,4 +1,5 @@
 import { UserService } from "../services/user.service.js";
+import grpc from "@grpc/grpc-js";
 
 const userService = new UserService();
 
@@ -13,11 +14,15 @@ export const userGrpcHandler = {
             );
 
             if (!user) {
-                throw new Error("User not found");
+                callback({
+                    code: grpc.status.NOT_FOUND,
+                    message: "User not found"
+                });
+                return;
             }
 
             callback(null, {
-                id: call.request.userId,
+                userId: call.request.userId,
                 name: user.name,
                 email: user.email
             });

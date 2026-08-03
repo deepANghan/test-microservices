@@ -16,6 +16,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.14.4",
     "@grpc/proto-loader": "^0.8.1",
+    "@package/auth": "^1.0.0",
     "@package/proto": "^1.0.0",
     "@types/express": "^5.0.6",
     "@types/pg": "^8.20.0",

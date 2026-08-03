@@ -1,6 +1,7 @@
 import express, { type NextFunction, type Request, type Response } from "express";
 import { TodoController } from "./controllers/todo.controller.js";
 import { env } from "./config/env.js";
+import { verifyServiceToken } from "@package/auth/verify";
 
 const app = express();
 const PORT = env.PORT;
@@ -8,6 +9,33 @@ const PORT = env.PORT;
 app.use(express.json());
 
 const todoController = new TodoController();
+
+app.use("/", (req, res, next) => {
+
+    try {
+        const tokenHeader = req.headers["x-service-token"] as string;
+
+        if (!tokenHeader) {
+            return res.status(401).json({
+                message: "Service token missing"
+            });
+        }
+
+        const token = tokenHeader.split(" ")[1];
+
+        verifyServiceToken(
+            token as string
+        );
+
+        next();
+
+    } catch (error) {
+
+        return res.status(401).json({
+            message: "Invalid service token"
+        });
+    }
+});
 
 app.post("/api/todo", todoController.create);
 app.get("/api/todo/:id", todoController.get);
