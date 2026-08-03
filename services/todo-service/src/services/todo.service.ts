@@ -1,5 +1,5 @@
 import { UserClient } from "../clients/user.client.js";
-import { getUser } from "../grpc/user.client.js";
+import { getUser } from "../grpc/clients/user.client.js";
 import type { Todo } from "../models/todo.model.js";
 import { TodoRepository } from "../repository/todo.repository.js";
 

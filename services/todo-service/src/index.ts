@@ -2,6 +2,7 @@ import express, { type NextFunction, type Request, type Response } from "express
 import { TodoController } from "./controllers/todo.controller.js";
 import { env } from "./config/env.js";
 import { verifyServiceToken } from "@package/auth/verify";
+import { startGrpcServer } from "./grpc/server.js";
 
 const app = express();
 const PORT = env.PORT;
@@ -55,3 +56,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(PORT, () => console.log(`todo service running on ${PORT}`));
+
+startGrpcServer();
