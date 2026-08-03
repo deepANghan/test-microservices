@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { routes } from "./routes.config.js";
 import axios from "axios";
+import { getServiceToken } from "./utils/serviceToken.js";
 
 async function handleProxy(req: Request, res: Response) {
 
@@ -19,18 +20,20 @@ async function handleProxy(req: Request, res: Response) {
 
     try {
 
+        let serviceToken = await getServiceToken();
+
         const result = await axios({
             url: route.target + req.originalUrl,
             method: req.method,
             data: req.body,
             headers: {
-                "content-type": req.headers["content-type"]
+                "content-type": req.headers["content-type"],
+                "x-service-token": "Bearer " + serviceToken
             },
             timeout: 5000
         });
 
         return res.status(result.status).json(result.data);
-
 
     } catch (error: any) {
 

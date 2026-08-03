@@ -4,7 +4,7 @@ const routes = [
     {
         path: "/user",
         target: registry.USER_SERVICE_URL,
-        protected: true
+        protected: false
     },
     {
         path: "/todo",
