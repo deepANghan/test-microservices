@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -b",
-    "generate": "grpc_tools_node_protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto.cmd --ts_proto_out=./src/generated --ts_proto_opt=outputServices=grpc-js,esModuleInterop=true --proto_path=./contracts ./contracts/*.proto",
+    "generate": "grpc_tools_node_protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto.cmd --ts_proto_out=./src/generated --ts_proto_opt=outputServices=grpc-js,esModuleInterop=true --ts_proto_opt=importSuffix=.js --ts_proto_opt=useDate=true --proto_path=./contracts ./contracts/*.proto",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,6 +17,7 @@
     "ts-proto": "^2.12.0"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./todo": "./dist/generated/todo.js"
   }
 }

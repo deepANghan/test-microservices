@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package todo;
+
+import "google/protobuf/timestamp.proto";
+
+service TodoService {
+    rpc CreateTodo(CreateTodoRequest) returns (CreateTodoResponse);
+    rpc GetTodo(GetTodoRequest) returns (GetTodoResponse);
+    rpc GetTodos(GetTodosRequest) returns (GetTodosResponse);
+    rpc UpdateTodo(UpdateTodoRequest) returns (UpdateTodoResponse);
+    rpc DeleteTodo(DeleteTodoRequest) returns (DeleteTodoResponse); 
+}
+
+message Todo {
+    string todoId = 1;
+    string title = 2;
+    bool status = 3;
+    google.protobuf.Timestamp createdAt = 4;
+    google.protobuf.Timestamp updatedAt = 5;
+}
+
+message CreateTodoRequest {
+    string title = 1;
+}
+
+message CreateTodoResponse {
+    string todoId = 1;
+    bool status = 2;
+}
+
+message GetTodoRequest {
+    string todoId = 1;
+}
+
+message GetTodoResponse {
+    Todo todo = 1;
+}
+
+message GetTodosRequest {}
+
+message GetTodosResponse {
+    repeated Todo todos = 1;
+}
+
+message UpdateTodoRequest {
+    string todoId = 1;
+    bool status = 2;
+}
+
+message UpdateTodoResponse {
+    Todo todo = 1;
+}
+
+message DeleteTodoRequest {
+    string todoId = 1;
+}
+
+message DeleteTodoResponse {
+    bool success = 1;
+}
