@@ -4,13 +4,14 @@ import { routes } from "./routes.config.js";
 import { authMiddleware } from "./middleware/auth.js";
 import type { NextFunction } from "express-serve-static-core";
 import { protect } from "./middleware/protected.js";
+import { rateLimit } from "./middleware/rate-limiter.js";
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 
-app.use("/api", protect, handleProxy);
+app.use("/api", rateLimit, protect, handleProxy);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
