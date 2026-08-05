@@ -3,6 +3,7 @@ import { randomUUID } from "crypto";
 import { generateToken } from "../utils/jwt.js";
 import { CredentialsRepository } from "../repository/credentials.repository.js";
 import { UserClient } from "../clients/user.client.js";
+import { publish } from "../clients/producer.js";
 
 
 
@@ -45,10 +46,18 @@ class AuthService {
 
         try {
 
-            await this.userClient.createUser({
-                userId: credentials.userId,
-                name: name,
-                email: email
+            // await this.userClient.createUser({
+            //     userId: credentials.userId,
+            //     name: name,
+            //     email: email
+            // });
+
+            await publish("UserCreated", {
+                key: credentials.userId,
+                data: {
+                    ...credentials,
+                    name: name
+                }
             });
 
         } catch (error) {
