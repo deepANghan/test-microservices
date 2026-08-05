@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { env } from "./config/env.js";
 import { startGrpcServer } from "./grpc/server.js";
 import { verifyServiceToken } from "@package/auth/verify";
+import { startConsuming } from "./clients/consumer.js";
 
 dotenv.config();
 
@@ -57,3 +58,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 app.listen(PORT, () => console.log(`user service running on ${PORT}`));
 
 startGrpcServer();
+
+startConsuming();
