@@ -55,6 +55,8 @@ class AuthService {
             await publish("UserCreated", {
                 key: credentials.userId,
                 data: {
+                    eventId: randomUUID(),
+                    eventType: "UserCreated",
                     ...credentials,
                     name: name
                 }

@@ -1,4 +1,6 @@
 import { kafkaClient } from "../config/kafka.js";
+import { pool } from "../config/pool.js";
+import { ProcessedEventsService } from "../services/processedEvents.service.js";
 import { UserService } from "../services/user.service.js";
 
 const consumer = kafkaClient.consumer({
@@ -16,13 +18,31 @@ async function startConsuming() {
     });
 
     await consumer.run({
-        eachMessage: async ({ message }) => {
-
-            console.log(message);
+        eachMessage: async ({ topic, partition, message }) => {
 
             const event = JSON.parse(message.value!.toString());
 
-            await userService.createUser(event.userId, event.name, event.email);
+            console.log(event);
+
+            try {
+
+                if (event.eventType === "UserCreated") {
+                    await userService.handleUserCreated(event);
+                }
+
+                await consumer.commitOffsets([
+                    {
+                        topic,
+                        partition,
+                        offset: (Number(message.offset) + 1).toString()
+                    }
+                ]);
+
+            } catch (error) {
+                console.error("Event processing failed", error);
+                return;
+            }
+
         }
     });
 }
