@@ -5,7 +5,7 @@ import { randomUUID } from "crypto";
 class UserRepository {
 
     async create(
-        userId: string, 
+        userId: string,
         name: string,
         email: string
     ): Promise<User> {
