@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { env } from "./config/env.js";
 import { startGrpcServer } from "./grpc/server.js";
 import { verifyServiceToken } from "@package/auth/verify";
-import { startConsuming } from "./clients/consumer.js";
+import { startConsuming } from "./services/consumer.js";
 
 dotenv.config();
 

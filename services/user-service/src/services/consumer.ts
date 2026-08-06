@@ -1,7 +1,7 @@
 import { kafkaClient } from "../config/kafka.js";
 import { pool } from "../config/pool.js";
-import { ProcessedEventsService } from "../services/processedEvents.service.js";
-import { UserService } from "../services/user.service.js";
+import { ProcessedEventsService } from "./processedEvents.service.js";
+import { UserService } from "./user.service.js";
 
 const consumer = kafkaClient.consumer({
     groupId: "user-group"
@@ -13,7 +13,7 @@ async function startConsuming() {
     await consumer.connect();
 
     await consumer.subscribe({
-        topic: "UserCreated",
+        topic: "user-events",
         fromBeginning: true
     });
 
