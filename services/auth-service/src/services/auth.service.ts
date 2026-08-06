@@ -4,6 +4,8 @@ import { generateToken } from "../utils/jwt.js";
 import { CredentialsRepository } from "../repository/credentials.repository.js";
 import { UserClient } from "../clients/user.client.js";
 import { publish } from "../clients/producer.js";
+import { OutboxRepository } from "../repository/outboxEvents.repository.js";
+import { pool } from "../config/pool.js";
 
 
 
@@ -12,10 +14,12 @@ class AuthService {
 
     private credentialsRepository: CredentialsRepository;
     private userClient: UserClient;
+    private outboxRepository: OutboxRepository;
 
     constructor() {
         this.credentialsRepository = new CredentialsRepository();
         this.userClient = new UserClient();
+        this.outboxRepository = new OutboxRepository();
     }
 
     async register(name: string, email: string, password: string) {
@@ -33,42 +37,51 @@ class AuthService {
 
         const passwordHash = await bcrypt.hash(password, 10);
 
-        const credentials =
-            await this.credentialsRepository.create({
-                userId: randomUUID(),
-                email,
-                passwordHash,
-                createdAt: new Date()
-            });
+        let credentials;
 
-
-        // call user service to save user data
+        const client = await pool.connect();
 
         try {
+            await client.query("BEGIN");
 
-            // await this.userClient.createUser({
-            //     userId: credentials.userId,
-            //     name: name,
-            //     email: email
-            // });
+            credentials =
+                await this.credentialsRepository.create(
+                    {
+                        userId: randomUUID(),
+                        email,
+                        passwordHash,
+                        createdAt: new Date()
+                    }
+                );
 
-            await publish("UserCreated", {
-                key: credentials.userId,
-                data: {
+
+            await this.outboxRepository.create(
+                randomUUID(),
+                "user-events",
+                credentials.userId,
+                {
                     eventId: randomUUID(),
                     eventType: "UserCreated",
-                    ...credentials,
-                    name: name
+                    userId: credentials.userId,
+                    email: credentials.email,
+                    name: name,
+                    createdAt: credentials.createdAt
                 }
-            });
+            );
+
+
+            await client.query("COMMIT");
+
 
         } catch (error) {
 
-            // revert the credentials entry
-            await this.credentialsRepository.deleteById(credentials.userId);
+            await client.query("ROLLBACK");
+            throw error;
 
-            console.log((error as unknown as Error).message);
-            throw new Error("User Service Failed");
+        } finally {
+
+            client.release();
+
         }
 
         return {
@@ -113,8 +126,23 @@ class AuthService {
         };
 
     }
-
-
 }
+
+
+// await publish("UserCreated", {
+//     key: credentials.userId,
+//     data: {
+//         eventId: randomUUID(),
+//         eventType: "UserCreated",
+//         ...credentials,
+//         name: name
+//     }
+// });
+
+// await this.userClient.createUser({
+//     userId: credentials.userId,
+//     name: name,
+//     email: email
+// });
 
 export { AuthService };

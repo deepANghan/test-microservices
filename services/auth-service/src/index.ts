@@ -3,6 +3,7 @@ import { env } from "./config/env.js";
 import { AuthController } from "./controllers/auth.controller.js";
 import { createServiceToken } from "@package/auth/sign";
 import { startProducer } from "./clients/producer.js";
+import { doPublish } from "./services/outbox-publisher.js";
 
 const app = express();
 const PORT = env.PORT;
@@ -39,4 +40,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 app.listen(PORT, () => console.log(`auth service running on ${PORT}`));
 
-startProducer();
+// startProducer();
+
+doPublish();
