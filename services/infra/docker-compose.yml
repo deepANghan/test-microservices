@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  consul:
+    image: hashicorp/consul:latest
+    container_name: consul
+    ports:
+      - "8500:8500"
+    command: >
+      agent 
+      -server
+      -ui
+      -node=consul_server
+      -bootstrap-expect=1
+      -client=0.0.0.0

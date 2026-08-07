@@ -4,6 +4,7 @@ import { AuthController } from "./controllers/auth.controller.js";
 import { createServiceToken } from "@package/auth/sign";
 import { startProducer } from "./clients/producer.js";
 import { doPublish } from "./services/outbox-publisher.js";
+import { registerService } from "./config/consul.js";
 
 const app = express();
 const PORT = env.PORT;
@@ -27,6 +28,13 @@ app.post("/api/auth/serviceToken", (req, res) => {
 
 });
 
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "UP",
+        service: "auth-service"
+    });
+});
+
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
     console.error(err);
@@ -38,8 +46,13 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 });
 
-app.listen(PORT, () => console.log(`auth service running on ${PORT}`));
+
+app.listen(PORT, async () => {
+    console.log(`auth service running on ${PORT}`);
+
+    await registerService();
+});
 
 // startProducer();
 
-doPublish();
+// doPublish();
