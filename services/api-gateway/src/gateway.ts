@@ -17,8 +17,18 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
     return res.status(500).json({
         message: err.message
-    })
+    });
 
+});
+
+process.on("uncaughtException", (err) => {
+    console.error("UNCAUGHT EXCEPTION:");
+    console.error(err);
+});
+
+process.on("unhandledRejection", (reason) => {
+    console.error("UNHANDLED REJECTION:");
+    console.error(reason);
 });
 
 app.listen(PORT, () => console.log(`API-GATEWAY running ON ${PORT}`));

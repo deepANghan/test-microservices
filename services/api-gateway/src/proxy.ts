@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { routes } from "./routes.config.js";
 import axios from "axios";
 import { getServiceToken } from "./utils/serviceToken.js";
+import { doDiscovery } from "./config/consul.js";
 
 async function handleProxy(req: Request, res: Response) {
 
@@ -9,7 +10,9 @@ async function handleProxy(req: Request, res: Response) {
 
     const route = routes.find((r) => path.startsWith(r.path));
 
-    // console.log(req.path, req.originalUrl, req.route, route);
+    console.log(req.path, req.originalUrl, req.route, route);
+
+    const serviceUrl = await doDiscovery(route?.service);
 
     if (!route) {
         return res.status(404)

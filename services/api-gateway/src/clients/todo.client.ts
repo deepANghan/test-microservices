@@ -3,7 +3,7 @@ import grpc, { Metadata } from "@grpc/grpc-js";
 
 let todoClient: TodoServiceClient | null = null;
 
-function getClient() {
+function getTodoClient() {
 
     if (todoClient) {
         return todoClient;
@@ -17,16 +17,12 @@ function getClient() {
     return todoClient;
 }
 
-async function getTodos(serviceToken: string, userId: string) {
+async function getTodos(metadata: Metadata, userId: string) {
 
-    const metadata = new Metadata();
-
-    metadata.add("x-service-token", serviceToken);
-    metadata.add("x-user-Id", userId);
 
     return new Promise((res, rej) => {
 
-        getClient().getTodos(
+        getTodoClient().getTodos(
             {},
             metadata,
             (error, response) => {
@@ -43,3 +39,61 @@ async function getTodos(serviceToken: string, userId: string) {
 
 }
 
+async function getTodo(metadata: Metadata, data: any) {
+
+    let todoId = data.todoId;
+
+    if (!todoId) {
+        throw new Error("Todo Id isn't present");
+    }
+
+    return new Promise((res, rej) => {
+        getTodoClient().getTodo(
+            { todoId: todoId },
+            metadata,
+            (err, response) => {
+
+                if (err) {
+                    console.log(err);
+                    rej(err);
+                }
+
+                console.log(response);
+
+                res(response);
+            }
+        );
+    });
+}
+
+async function CreateTodo(serviceToken: string, data: any) {
+
+    let title = data.title;
+
+    const metadata = new Metadata();
+
+    metadata.add("x-service-token", serviceToken);
+
+    if (!title) {
+        throw new Error("Title is not present");
+    }
+
+    return new Promise((res, rej) => {
+
+        getTodoClient().createTodo(
+            { title: title },
+            metadata,
+            (err, response) => {
+
+                if (err) {
+                    rej(err);
+                }
+
+                res(response);
+            }
+        );
+
+    })
+}
+
+export { getTodoClient, getTodo, getTodos, CreateTodo };

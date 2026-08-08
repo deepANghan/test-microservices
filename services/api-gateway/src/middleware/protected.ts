@@ -12,7 +12,6 @@ function protect(req: Request, res: Response, next: NextFunction) {
             .json({
                 message: "Route not found"
             });
-
     }
 
     if (route.protected) {
