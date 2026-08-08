@@ -5,11 +5,17 @@ import { env } from "./config/env.js";
 import { startGrpcServer } from "./grpc/server.js";
 import { verifyServiceToken } from "@package/auth/verify";
 import { startConsuming } from "./services/consumer.js";
+import { registerService } from "./config/consul.js";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
 const PORT = env.PORT;
+
+app.use(cors({
+    origin: "*"
+}));
 
 app.use(express.json());
 
@@ -17,6 +23,12 @@ const userController = new UserController();
 
 app.use("/", (req, res, next) => {
     try {
+
+        if (req.path == "/health") {
+            next();
+            return;
+        }
+
         const tokenHeader = req.headers["x-service-token"] as string;
 
         if (!tokenHeader) {
@@ -44,6 +56,13 @@ app.use("/", (req, res, next) => {
 app.post("/api/user", userController.create);
 app.get("/api/user/:id", userController.get);
 
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "UP",
+        service: "user-service"
+    });
+});
+
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
     console.error(err);
@@ -55,8 +74,12 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 });
 
-app.listen(PORT, () => console.log(`user service running on ${PORT}`));
+app.listen(PORT, async () => {
+    console.log(`user service running on ${PORT}`);
+
+    await registerService();
+});
 
 startGrpcServer();
 
-startConsuming();
+// startConsuming();

@@ -14,7 +14,7 @@ export const up = (pgm) => {
         id: {
             type: "uuid",
             primaryKey: true,
-        },
+        },  
         name: {
             type: "varchar(100)",
             notNull: true

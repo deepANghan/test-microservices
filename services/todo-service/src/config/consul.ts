@@ -11,19 +11,19 @@ export async function registerService() {
     try {
 
         await consul.agent.service.register({
-            id: `auth-service-1`,
-            name: "auth-service",
+            id: `todo-service-1`,
+            name: "todo-service",
             address: "localhost",
             port: env.PORT,
             check: {
-                name: "auth-service-health-check",
+                name: "todo-service-health-check",
                 http: `http://host.docker.internal:${env.PORT}/health`,
                 interval: "10s",
                 timeout: "5s"
             }
         });
 
-        console.log("auth service registered to service registery");
+        console.log("todo service registered to service registery");
 
 
     } catch (error: any) {
@@ -36,7 +36,7 @@ export async function registerService() {
 process.on("SIGINT", async () => {
 
     await consul.agent.service.deregister(
-        "auth-service-1"
+        "todo-service-1"
     );
     process.exit();
 

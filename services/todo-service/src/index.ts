@@ -3,9 +3,16 @@ import { TodoController } from "./controllers/todo.controller.js";
 import { env } from "./config/env.js";
 import { verifyServiceToken } from "@package/auth/verify";
 import { startGrpcServer } from "./grpc/server.js";
+import { registerService } from "./config/consul.js";
+import cors from "cors";
 
 const app = express();
 const PORT = env.PORT;
+
+app.use(cors({
+    origin: "*"
+}));
+
 
 app.use(express.json());
 
@@ -14,6 +21,13 @@ const todoController = new TodoController();
 app.use("/", (req, res, next) => {
 
     try {
+
+        if (req.path == "/health") {
+            next();
+            return;
+        }
+
+
         const tokenHeader = req.headers["x-service-token"] as string;
 
         if (!tokenHeader) {
@@ -44,6 +58,13 @@ app.get("/api/todo/user/:userId", todoController.getByUser);
 app.put("/api/todo/:id", todoController.update);
 app.delete("/api/todo/:id", todoController.remove);
 
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "UP",
+        service: "todo-service"
+    });
+});
+
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
     console.error(err);
@@ -55,6 +76,10 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 });
 
-app.listen(PORT, () => console.log(`todo service running on ${PORT}`));
+app.listen(PORT, async () => {
+    console.log(`todo service running on ${PORT}`);
+
+    await registerService();
+});
 
 startGrpcServer();

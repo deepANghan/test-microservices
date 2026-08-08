@@ -5,9 +5,14 @@ import { createServiceToken } from "@package/auth/sign";
 import { startProducer } from "./clients/producer.js";
 import { doPublish } from "./services/outbox-publisher.js";
 import { registerService } from "./config/consul.js";
+import cors from "cors";
 
 const app = express();
 const PORT = env.PORT;
+
+app.use(cors({
+    origin: "*"
+}));
 
 app.use(express.json());
 
@@ -52,6 +57,7 @@ app.listen(PORT, async () => {
 
     await registerService();
 });
+
 
 // startProducer();
 
