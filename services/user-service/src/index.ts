@@ -21,37 +21,37 @@ app.use(express.json());
 
 const userController = new UserController();
 
-app.use("/", (req, res, next) => {
-    try {
+// app.use("/", (req, res, next) => {
+//     try {
 
-        if (req.path == "/health") {
-            next();
-            return;
-        }
+//         if (req.path == "/health") {
+//             next();
+//             return;
+//         }
 
-        const tokenHeader = req.headers["x-service-token"] as string;
+//         const tokenHeader = req.headers["x-service-token"] as string;
 
-        if (!tokenHeader) {
-            return res.status(401).json({
-                message: "Service token missing"
-            });
-        }
+//         if (!tokenHeader) {
+//             return res.status(401).json({
+//                 message: "Service token missing"
+//             });
+//         }
 
-        const token = tokenHeader.split(" ")[1];
+//         const token = tokenHeader.split(" ")[1];
 
-        verifyServiceToken(
-            token as string
-        );
+//         verifyServiceToken(
+//             token as string
+//         );
 
-        next();
+//         next();
 
-    } catch (error) {
+//     } catch (error) {
 
-        return res.status(401).json({
-            message: "Invalid service token"
-        });
-    }
-});
+//         return res.status(401).json({
+//             message: "Invalid service token"
+//         });
+//     }
+// });
 
 app.post("/api/user", userController.create);
 app.get("/api/user/:id", userController.get);

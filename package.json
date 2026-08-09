@@ -22,5 +22,10 @@
     "url": "https://github.com/deepANghan/test-microservices/issues"
   },
   "homepage": "https://github.com/deepANghan/test-microservices#readme",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.221.0",
+    "@opentelemetry/resources": "^2.10.0",
+    "@opentelemetry/semantic-conventions": "^1.43.0"
+  }
 }
