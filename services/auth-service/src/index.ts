@@ -33,7 +33,7 @@ app.post("/api/auth/serviceToken", (req, res) => {
 
 });
 
-app.get("/health", (req, res) => {
+app.get("/api/auth/health", (req, res) => {
     res.status(200).json({
         status: "UP",
         service: "auth-service"

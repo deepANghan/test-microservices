@@ -9,6 +9,7 @@ export function authMiddleware(
 ) {
 
     const header = req.headers.authorization;
+
     if (!header) {
 
         return res.status(401)
