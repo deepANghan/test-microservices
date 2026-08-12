@@ -13,44 +13,41 @@ app.use(cors({
     origin: "*"
 }));
 
-
 app.use(express.json());
 
 const todoController = new TodoController();
 
-app.use("/", (req, res, next) => {
+// app.use("/", (req, res, next) => {
 
-    try {
+//     try {
 
-        if (req.path == "/health") {
-            next();
-            return;
-        }
+//         if (req.path == "/health") {
+//             next();
+//             return;
+//         }
+//         const tokenHeader = req.headers["x-service-token"] as string;
 
+//         if (!tokenHeader) {
+//             return res.status(401).json({
+//                 message: "Service token missing"
+//             });
+//         }
 
-        const tokenHeader = req.headers["x-service-token"] as string;
+//         const token = tokenHeader.split(" ")[1];
 
-        if (!tokenHeader) {
-            return res.status(401).json({
-                message: "Service token missing"
-            });
-        }
+//         verifyServiceToken(
+//             token as string
+//         );
 
-        const token = tokenHeader.split(" ")[1];
+//         next();
 
-        verifyServiceToken(
-            token as string
-        );
+//     } catch (error) {
 
-        next();
-
-    } catch (error) {
-
-        return res.status(401).json({
-            message: "Invalid service token"
-        });
-    }
-});
+//         return res.status(401).json({
+//             message: "Invalid service token"
+//         });
+//     }
+// });
 
 app.post("/api/todo", todoController.create);
 app.get("/api/todo/:id", todoController.get);
@@ -66,19 +63,15 @@ app.get("/health", (req, res) => {
 });
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-
     console.error(err);
-
     res.status(500).json({
         success: false,
         message: "Internal Server Error"
     });
-
 });
 
 app.listen(PORT, async () => {
     console.log(`todo service running on ${PORT}`);
-
     await registerService();
 });
 

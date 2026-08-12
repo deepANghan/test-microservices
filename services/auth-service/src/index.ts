@@ -41,20 +41,16 @@ app.get("/api/auth/health", (req, res) => {
 });
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-
     console.error(err);
-
     res.status(500).json({
         success: false,
         message: "Internal Server Error"
     });
-
 });
 
 
 app.listen(PORT, async () => {
     console.log(`auth service running on ${PORT}`);
-
     await registerService();
 });
 
